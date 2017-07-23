@@ -1,12 +1,10 @@
 #ifndef PAINTAREA_H
 #define PAINTAREA_H
 
-#include <QOpenGLWidget>
 #include <QScrollArea>
 #include <QPen>
 #include <QVector>
 #include <QPixmap>
-#include <QLabel>
 
 #include "paintarea.h"
 #include "paintwidget.h"
