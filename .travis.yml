@@ -20,7 +20,6 @@ before_script:
 script: 
   - $CXX --version
   - g++-7 --version
-  - qmake -qt=qt5 QtPaint.pro -r -spec linux-g++ CONFIG+=release
+  - qmake QtPaint.pro -r -spec linux-g++ CONFIG+=release
   - make -j9 CXX='g++-7' CXXFLAGS='-std=c++14 -Wall -Wno-error -fPIC'
-  - ls -lhsa QtPaint
   
