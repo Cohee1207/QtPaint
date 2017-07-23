@@ -36,7 +36,9 @@ public:
         MAX_ZOOM = 400,
         MIN_PEN_WIDTH = 1,
         MAX_IMAGE_SIZE = 2000,
-        MIN_IMAGE_SIZE = 1
+        MIN_IMAGE_SIZE = 1,
+        DEFAULT_WIDTH = 800,
+        DEFAULT_HEIGHT = 600
     };
     enum Transformations {
         ROTATE_LEFT = 270,
@@ -58,7 +60,7 @@ public:
 
     bool loadImage(const QString&);
 
-    void setDefaultLayer(int width = 800, int height = 600, QColor fill = QColor(Qt::white));
+    void setDefaultLayer(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, QColor fill = QColor(Qt::white));
 
     bool pasteImage();
 
