@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/color.png</file>
+        <file>icons/down.png</file>
+        <file>icons/open.png</file>
+        <file>icons/save.png</file>
+        <file>icons/up.png</file>
+        <file>icons/lines.png</file>
+        <file>icons/new.png</file>
+        <file>icons/app.png</file>
+        <file>icons/paste.png</file>
+        <file>icons/redo.png</file>
+        <file>icons/undo.png</file>
+        <file>icons/brush.png</file>
+        <file>icons/eraser.png</file>
+        <file>icons/about.png</file>
+        <file>icons/flip-horizontal.png</file>
+        <file>icons/flip-vertical.png</file>
+        <file>icons/rotate-right.png</file>
+        <file>icons/rotate-left.png</file>
+        <file>icons/resize.png</file>
+        <file>icons/line.png</file>
+        <file>icons/rectangle.png</file>
+        <file>icons/clear.png</file>
+        <file>icons/copy.png</file>
+        <file>icons/visible.png</file>
+        <file>icons/color-picker.png</file>
+        <file>icons/ellipse.png</file>
+        <file>icons/layer-visible-off.png</file>
+        <file>icons/zoom-in.png</file>
+        <file>icons/zoom-out.png</file>
+        <file>background.bmp</file>
+    </qresource>
+</RCC>

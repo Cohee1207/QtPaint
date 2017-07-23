@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1007</width>
+    <height>597</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>QtPaint</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icons/app.png</normaloff>:/icons/app.png</iconset>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>24</width>
+    <height>24</height>
+   </size>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="PaintArea" name="openGLWidget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>22</width>
+     <height>22</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonIconOnly</enum>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNew_image"/>
+   <addaction name="actionOpen_file"/>
+   <addaction name="actionSave_file"/>
+   <addaction name="separator"/>
+   <addaction name="actionCopy"/>
+   <addaction name="actionPaste"/>
+   <addaction name="separator"/>
+   <addaction name="actionIncrease_pen_width"/>
+   <addaction name="actionDecrease_pen_width"/>
+   <addaction name="separator"/>
+   <addaction name="actionClear_drawn"/>
+   <addaction name="actionShow_drawn"/>
+   <addaction name="actionSelect_color"/>
+   <addaction name="separator"/>
+   <addaction name="actionRotate_left"/>
+   <addaction name="actionRotate_right"/>
+   <addaction name="actionFlip_horizontal"/>
+   <addaction name="actionFlip_vertical"/>
+   <addaction name="separator"/>
+   <addaction name="actionAbout"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="sizeGripEnabled">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <action name="actionIncrease_pen_width">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/up.png</normaloff>:/icons/up.png</iconset>
+   </property>
+   <property name="text">
+    <string>Width +</string>
+   </property>
+   <property name="toolTip">
+    <string>Increase pen width</string>
+   </property>
+   <property name="shortcut">
+    <string>]</string>
+   </property>
+  </action>
+  <action name="actionDecrease_pen_width">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/down.png</normaloff>:/icons/down.png</iconset>
+   </property>
+   <property name="text">
+    <string>Width -</string>
+   </property>
+   <property name="toolTip">
+    <string>Decrease pen width</string>
+   </property>
+   <property name="shortcut">
+    <string>[</string>
+   </property>
+  </action>
+  <action name="actionOpen_file">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/open.png</normaloff>:/icons/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open file</string>
+   </property>
+   <property name="toolTip">
+    <string>Open image file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave_file">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save file</string>
+   </property>
+   <property name="toolTip">
+    <string>Save image file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSelect_color">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/color-picker.png</normaloff>:/icons/color-picker.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pen color</string>
+   </property>
+   <property name="toolTip">
+    <string>Open color selection dialog</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
+   </property>
+  </action>
+  <action name="actionShow_drawn">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/visible.png</normaloff>:/icons/visible.png</iconset>
+   </property>
+   <property name="text">
+    <string>Show drawn</string>
+   </property>
+   <property name="toolTip">
+    <string>Show drawn image</string>
+   </property>
+   <property name="shortcut">
+    <string>O</string>
+   </property>
+  </action>
+  <action name="actionNew_image">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/new.png</normaloff>:/icons/new.png</iconset>
+   </property>
+   <property name="text">
+    <string>New image</string>
+   </property>
+   <property name="toolTip">
+    <string>Create blank image</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/paste.png</normaloff>:/icons/paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paste</string>
+   </property>
+   <property name="toolTip">
+    <string>Paste image from clipboard</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/about.png</normaloff>:/icons/about.png</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/copy.png</normaloff>:/icons/copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy image to clipboard</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionClear_drawn">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/clear.png</normaloff>:/icons/clear.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clear drawn</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear drawn image</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionFlip_horizontal">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/flip-horizontal.png</normaloff>:/icons/flip-horizontal.png</iconset>
+   </property>
+   <property name="text">
+    <string>Flip horizontal</string>
+   </property>
+   <property name="toolTip">
+    <string>Flips image on horizontal axis</string>
+   </property>
+  </action>
+  <action name="actionFlip_vertical">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/flip-vertical.png</normaloff>:/icons/flip-vertical.png</iconset>
+   </property>
+   <property name="text">
+    <string>Flip vertical</string>
+   </property>
+   <property name="toolTip">
+    <string>Flips image on vertical axis</string>
+   </property>
+  </action>
+  <action name="actionRotate_left">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/rotate-left.png</normaloff>:/icons/rotate-left.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate left</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotates image counter-clockwise</string>
+   </property>
+  </action>
+  <action name="actionRotate_right">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/rotate-right.png</normaloff>:/icons/rotate-right.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate right</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotates image clockwise</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>PaintArea</class>
+   <extends>QWidget</extends>
+   <header>paintarea.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
