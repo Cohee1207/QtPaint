@@ -1,25 +1,18 @@
 language: generic
 
 before_install:
- - sudo add-apt-repository ppa:ubuntu-toolchain-r/test --yes
  - sudo add-apt-repository ppa:beineri/opt-qt591-trusty --yes
  - sudo apt-get update -qq
- - sudo apt-get install qt59-meta-full --yes
  
 install:
-  - sudo apt-get remove g++
-  - sudo apt-get install -qq g++-7
+ - sudo apt-get install qt59-meta-full --yes
   
-env: CXX="g++-7" CXXFLAGS="-std=c++14 -Wall -Wno-error"
-
 before_script:
     - QTDIR="/opt/qt59"
     - PATH="$QTDIR/bin:$PATH"
     - source /opt/qt59/bin/qt59-env.sh
 
 script: 
-  - $CXX --version
-  - g++-7 --version
   - qmake QtPaint.pro CONFIG+=release
-  - make -j9 CXX='g++-7' CXXFLAGS='-std=c++14 -Wall -Wno-error -fPIC'
-  
+  - make -j9 CXXFLAGS='-std=c++14 -Wall -Wno-error'
+ 
