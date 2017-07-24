@@ -14,5 +14,5 @@ before_script:
 
 script: 
   - qmake QtPaint.pro CONFIG+=release
-  - make -j9 CXXFLAGS='-std=c++14 -Wall -Wno-error'
+  - make -j9 CXXFLAGS='-Wall -Wno-error'
  
