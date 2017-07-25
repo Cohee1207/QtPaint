@@ -60,10 +60,10 @@ void PaintWidget::paintEvent(QPaintEvent*)
     painter.fillRect(rect(), m_checkeredBackground);
     for (int i = 0; i < m_layers.size(); i++) {
         if (m_layers[i].visible()) {
-            painter.drawImage(rect(), *m_layers[i].image());
+            painter.drawImage(QPoint(0, 0), *m_layers[i].image());
         }
     }
-    painter.drawPixmap(rect(), m_toolLayer);
+    painter.drawPixmap(QPoint(0, 0), m_toolLayer);
 }
 
 QPixmap *PaintWidget::toolLayer()
@@ -153,5 +153,18 @@ void PaintWidget::setSingleLayer(const QImage& image)
 
 void PaintWidget::addLayer(const QImage & image, const QString & name)
 {
-
+    if (m_layers.size() != 0) {
+        auto currentSize = m_layers[0].image()->size();
+        if(image.size() != currentSize) {
+            /// TODO: Add pasted layer to selection when selection is implemented
+            QPixmap pixmap(currentSize);
+            pixmap.fill(Qt::transparent);
+            QPainter painter(&pixmap);
+            painter.drawImage(QPoint(0,0), image);
+            m_layers.append(Layer(pixmap.toImage().convertToFormat(QImage::Format_ARGB32_Premultiplied), name));
+        } else {
+            m_layers.append(Layer(image,name));
+        }
+    }
+    m_selectedLayer = m_layers.size() - 1;
 }
