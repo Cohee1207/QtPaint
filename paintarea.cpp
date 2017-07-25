@@ -22,6 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QBitmap>
 #include <QClipboard>
 #include <QTransform>
+#include <memory>
 
 #include "paintarea.h"
 #include "paintevent.h"
@@ -56,7 +57,7 @@ void PaintArea::setPenWidth(int value)
 
 PaintArea::~PaintArea()
 {
-
+    delete m_paintWidget;
 }
 
 bool PaintArea::loadImage(const QString& path)
@@ -88,11 +89,10 @@ void PaintArea::mouseMove(const QPoint& pos, QImage* layer)
 {
     if (m_collectMouseMove) {
         auto adjusted = adjustedPos(pos);
-        auto event = fillPaintEvent(adjusted,layer);
-        m_tools[m_selectedTool]->onMouseMove(event);
+        std::shared_ptr<PaintEvent> event (fillPaintEvent(adjusted,layer));
+        m_tools[m_selectedTool]->onMouseMove(event.get());
         m_prevPoint = adjusted;
         m_paintWidget->repaint();
-        delete event;
     }
 }
 
@@ -101,19 +101,17 @@ void PaintArea::mousePress(const QPoint& pos, QImage* layer)
     m_collectMouseMove = true;
     auto adjusted = adjustedPos(pos);
     m_prevPoint = adjusted;
-    auto event = fillPaintEvent(adjusted,layer);
-    m_tools[m_selectedTool]->onMousePress(event);
+    std::shared_ptr<PaintEvent> event (fillPaintEvent(adjusted,layer));
+    m_tools[m_selectedTool]->onMousePress(event.get());
     m_paintWidget->repaint();
-    delete event;
 }
 
 void PaintArea::mouseRelease(const QPoint& pos, QImage* layer)
 {
     m_collectMouseMove = false;
-    auto event = fillPaintEvent(adjustedPos(pos),layer);
-    m_tools[m_selectedTool]->onMouseRelease(event);
+    std::shared_ptr<PaintEvent> event (fillPaintEvent(adjustedPos(pos),layer));
+    m_tools[m_selectedTool]->onMouseRelease(event.get());
     m_paintWidget->repaint();
-    delete event;
 }
 
 QImage PaintArea::saveImage()

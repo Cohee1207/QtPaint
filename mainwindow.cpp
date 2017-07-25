@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget* parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    m_paintArea = ui->openGLWidget;
+    m_paintArea = ui->paintArea;
     m_fileName = DEFAULT_FILE_NAME;
     m_layersList = new LayersList;
     setStatusBar();

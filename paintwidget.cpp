@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QBitmap>
 #include <QDebug>
 #include <QMouseEvent>
+#include <memory>
 
 PaintWidget::PaintWidget(QWidget *parent) : QWidget(parent), m_selectedLayer(0)
 {
@@ -93,12 +94,11 @@ void PaintWidget::rotate(int degree)
     if (m_layers.size() == 0) {
         return;
     }
-    auto transform = new QTransform();
+    std::unique_ptr<QTransform> transform(new QTransform);
     transform->rotate(qreal(degree));
     for(int i = 0; i < m_layers.size(); i++) {
         m_layers[i].setImage(m_layers[i].image()->transformed(*transform));
     }
-    delete transform;
     auto size = m_layers[0].image()->size();
     resize(size);
     setToolLayer(size);
