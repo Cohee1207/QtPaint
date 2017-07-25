@@ -54,16 +54,23 @@ void PaintWidget::mouseReleaseEvent(QMouseEvent* event)
     }
 }
 
-void PaintWidget::paintEvent(QPaintEvent*)
+void PaintWidget::paintEvent(QPaintEvent* event)
 {
+    auto eventRect = event->rect();
     QPainter painter(this);
     painter.fillRect(rect(), m_checkeredBackground);
+    if (m_layers.size() == 0)
+        return;
+    qreal scaleX = size().width() / qreal(m_layers[0].image()->size().width());
+    qreal scaleY = size().height() / qreal(m_layers[0].image()->size().height());
+    qreal scale = qMin(scaleX, scaleY);
+    auto imageRect = QRectF(eventRect.topLeft() / scale, eventRect.bottomRight() / scale);
     for (int i = 0; i < m_layers.size(); i++) {
         if (m_layers[i].visible()) {
-            painter.drawImage(QPoint(0, 0), *m_layers[i].image());
+            painter.drawImage(eventRect, *m_layers[i].image(), imageRect);
         }
     }
-    painter.drawPixmap(QPoint(0, 0), m_toolLayer);
+    painter.drawPixmap(eventRect, m_toolLayer, imageRect);
 }
 
 QPixmap *PaintWidget::toolLayer()
