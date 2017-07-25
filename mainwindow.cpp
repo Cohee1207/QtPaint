@@ -4,6 +4,7 @@
 #include <QImageWriter>
 #include <QCheckBox>
 #include <QMessageBox>
+#include <QDockWidget>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "newimagedialog.h"
@@ -23,8 +24,10 @@ MainWindow::MainWindow(QWidget* parent) :
     ui->setupUi(this);
     m_paintArea = ui->openGLWidget;
     m_fileName = DEFAULT_FILE_NAME;
+    m_layersList = new LayersList;
     setStatusBar();
     setToolBox();
+    setDock();
 }
 
 MainWindow::~MainWindow()
@@ -110,6 +113,16 @@ void MainWindow::setStatusBar()
     auto zoom = new ZoomSlider();
     connect(zoom->slider(), &QSlider::valueChanged, m_paintArea, &PaintArea::setZoom);
     ui->statusBar->addPermanentWidget(zoom);
+}
+
+void MainWindow::setDock()
+{
+    static QLabel* title = new QLabel(QStringLiteral("Layers"));
+    title->setAlignment(Qt::AlignHCenter);
+    m_dock.setTitleBarWidget(title);
+    m_dock.setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_dock.setWidget(m_layersList);
+    addDockWidget(Qt::RightDockWidgetArea, &m_dock);
 }
 
 bool MainWindow::saveExistingFile()
@@ -229,4 +242,9 @@ void MainWindow::on_actionRotate_left_triggered()
 void MainWindow::on_actionRotate_right_triggered()
 {
     m_paintArea->transform(PaintArea::ROTATE_RIGHT);
+}
+
+void MainWindow::on_actionLayers_triggered(bool checked)
+{
+    m_dock.setVisible(checked);
 }

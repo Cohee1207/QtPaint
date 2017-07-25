@@ -21,7 +21,7 @@ const QString EllipseTool::iconName()
 
 void EllipseTool::paint(const QPoint& p, bool temporary)
 {
-    clearBlankPixmap();
+    clearToolLayer();
     QPaintDevice* device;
     if (temporary) {
         device = m_area->toolLayer();
@@ -53,5 +53,5 @@ void EllipseTool::onMouseRelease(const QPoint& p)
         return;
     }
     paint(p, false);
-    clearBlankPixmap();
+    clearToolLayer();
 }

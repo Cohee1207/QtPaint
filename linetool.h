@@ -17,6 +17,7 @@ public:
 protected:
     QPoint m_originPoint;
     virtual void paint(const QPoint&, bool temporary);
+    void clearToolLayer();
 };
 
 #endif // LINETOOL_H

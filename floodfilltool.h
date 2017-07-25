@@ -21,7 +21,7 @@ private:
     int imageHeight;
     void floodFill(const QPoint&);
     bool valid(const QPoint&);
-    bool canFill(const QImage*, const QPoint&, const QColor&, QColor&);
+    bool canFill(const QImage*, const QPoint&, const QColor&);
 };
 
 #endif // FLOODFILLTOOL_H

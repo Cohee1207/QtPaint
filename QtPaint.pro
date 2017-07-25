@@ -44,7 +44,8 @@ SOURCES += \
     ellipsetool.cpp \
     layer.cpp \
     paintwidget.cpp \
-    zoomslider.cpp
+    zoomslider.cpp \
+    layerslist.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -62,13 +63,15 @@ HEADERS += \
     ellipsetool.h \
     layer.h \
     paintwidget.h \
-    zoomslider.h
+    zoomslider.h \
+    layerslist.h
 
 FORMS += \
         mainwindow.ui \
     newimagedialog.ui \
     resizedialog.ui \
-    zoomslider.ui
+    zoomslider.ui \
+    layerslist.ui
 
 RESOURCES += \
     resources.qrc

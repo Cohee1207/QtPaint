@@ -35,6 +35,9 @@
       <iconset resource="resources.qrc">
        <normaloff>:/icons/zoom-out.png</normaloff>:/icons/zoom-out.png</iconset>
      </property>
+     <property name="shortcut">
+      <string>Ctrl+-</string>
+     </property>
     </widget>
    </item>
    <item>
@@ -70,6 +73,9 @@
      <property name="icon">
       <iconset resource="resources.qrc">
        <normaloff>:/icons/zoom-in.png</normaloff>:/icons/zoom-in.png</iconset>
+     </property>
+     <property name="shortcut">
+      <string>Ctrl+=</string>
      </property>
     </widget>
    </item>

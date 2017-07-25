@@ -17,7 +17,6 @@ public:
     PaintTool(PaintArea* area) : m_area(area) {}
 protected:
     PaintArea* m_area;
-    void clearBlankPixmap();
 };
 
 #endif // PAINTTOOL_H

@@ -21,7 +21,7 @@ const QString RectangleTool::iconName()
 
 void RectangleTool::paint(const QPoint& p, bool temporary)
 {
-    clearBlankPixmap();
+    clearToolLayer();
     QPaintDevice* device;
     if (temporary) {
         device = m_area->toolLayer();
@@ -51,5 +51,5 @@ void RectangleTool::onMouseRelease(const QPoint& p)
         return;
     }
     paint(p, false);
-    clearBlankPixmap();
+    clearToolLayer();
 }

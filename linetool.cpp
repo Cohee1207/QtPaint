@@ -28,7 +28,7 @@ void LineTool::onMousePress(const QPoint& p)
 void LineTool::onMouseRelease(const QPoint& p)
 {
     paint(p, false);
-    clearBlankPixmap();
+    clearToolLayer();
 }
 
 void LineTool::onMouseMove(const QPoint& p)
@@ -38,7 +38,7 @@ void LineTool::onMouseMove(const QPoint& p)
 
 void LineTool::paint(const QPoint& p, bool temporary)
 {
-    clearBlankPixmap();
+    clearToolLayer();
     QPaintDevice* device;
     if (temporary) {
         device = m_area->toolLayer();
@@ -52,3 +52,9 @@ void LineTool::paint(const QPoint& p, bool temporary)
     painter.setPen(m_area->pen());
     painter.drawLine(m_originPoint, p);
 }
+
+void LineTool::clearToolLayer()
+{
+    m_area->toolLayer()->fill(Qt::transparent);
+}
+

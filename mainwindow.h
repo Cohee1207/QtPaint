@@ -4,9 +4,11 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QComboBox>
+#include <QDockWidget>
 #include "paintarea.h"
 #include "colorlabel.h"
 #include "widthbutton.h"
+#include "layerslist.h"
 
 namespace Ui {
 class MainWindow;
@@ -51,10 +53,14 @@ private slots:
 
     void on_actionRotate_right_triggered();
 
+    void on_actionLayers_triggered(bool checked);
+
 private:
     QString m_fileName;
+    LayersList* m_layersList;
     QString m_filePath;
     QComboBox m_toolbox;
+    QDockWidget m_dock;
     Ui::MainWindow* ui;
     WidthButton* m_widthButton;
     ColorLabel m_strokeColorLabel;
@@ -64,6 +70,7 @@ private:
     void closeEvent(QCloseEvent*) override;
     void setToolBox();
     void setStatusBar();
+    void setDock();
     bool saveExistingFile();
     bool saveNewFile();
     int confirmSaveAction();

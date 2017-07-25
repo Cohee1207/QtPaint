@@ -93,18 +93,12 @@
    <addaction name="actionCopy"/>
    <addaction name="actionPaste"/>
    <addaction name="separator"/>
-   <addaction name="actionIncrease_pen_width"/>
-   <addaction name="actionDecrease_pen_width"/>
-   <addaction name="separator"/>
-   <addaction name="actionClear_drawn"/>
-   <addaction name="actionShow_drawn"/>
-   <addaction name="actionSelect_color"/>
-   <addaction name="separator"/>
    <addaction name="actionRotate_left"/>
    <addaction name="actionRotate_right"/>
    <addaction name="actionFlip_horizontal"/>
    <addaction name="actionFlip_vertical"/>
    <addaction name="separator"/>
+   <addaction name="actionLayers"/>
    <addaction name="actionAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
@@ -195,7 +189,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset>
      <normaloff>:/icons/visible.png</normaloff>:/icons/visible.png</iconset>
    </property>
    <property name="text">
@@ -326,6 +320,24 @@
    </property>
    <property name="toolTip">
     <string>Rotates image clockwise</string>
+   </property>
+  </action>
+  <action name="actionLayers">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/layers.png</normaloff>:/icons/layers.png</iconset>
+   </property>
+   <property name="text">
+    <string>Layers</string>
+   </property>
+   <property name="toolTip">
+    <string>Show layers menu</string>
    </property>
   </action>
  </widget>

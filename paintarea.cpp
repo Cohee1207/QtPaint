@@ -21,10 +21,9 @@ PaintArea::PaintArea(QWidget* parent) : QScrollArea(parent), m_paintWidget(new P
     m_zoom = DEFAULT_ZOOM;
     setAlignment(Qt::AlignCenter);
     setBackgroundRole(QPalette::Midlight);
-    setRepaintTimer();
+    //setRepaintTimer();
     setDefaultLayer();
     setDefaultPen();
-    setPaintTools();
     setWidget(m_paintWidget);
     connect(m_paintWidget, &PaintWidget::mouseMove, this, &PaintArea::mouseMove);
     connect(m_paintWidget, &PaintWidget::mouseRelease, this, &PaintArea::mouseRelease);
@@ -79,6 +78,7 @@ bool PaintArea::loadImage(const QString& path)
     m_selectedLayer = 0;
     m_paintWidget->resize(image.size());
     setToolLayer(image.size());
+    m_paintWidget->repaint();
     return true;
 }
 
@@ -126,6 +126,7 @@ void PaintArea::setDefaultLayer(int width, int height, QColor fill)
     m_selectedLayer = 0;
     m_paintWidget->resize(width, height);
     setToolLayer(QSize(width,height));
+    m_paintWidget->repaint();
 }
 
 void PaintArea::mouseMove(const QPoint& pos)
@@ -134,7 +135,7 @@ void PaintArea::mouseMove(const QPoint& pos)
         auto adjusted = adjustedPos(pos);
         m_tools[m_selectedTool]->onMouseMove(adjusted);
         m_prevPoint = adjusted;
-        _update_proxy();
+        m_paintWidget->repaint();
     }
 }
 
@@ -145,7 +146,7 @@ void PaintArea::mousePress(const QPoint& pos, int button)
         auto adjusted = adjustedPos(pos);
         m_prevPoint = adjusted;
         m_tools[m_selectedTool]->onMousePress(adjusted);
-        _update_proxy();
+        m_paintWidget->repaint();
     }
 }
 
@@ -154,7 +155,7 @@ void PaintArea::mouseRelease(const QPoint& pos, int button)
     if (button == Qt::LeftButton) {
         m_collectMouseMove = false;
         m_tools[m_selectedTool]->onMouseRelease(adjustedPos(pos));
-        _update_proxy();
+        m_paintWidget->repaint();
     }
 }
 
@@ -196,10 +197,6 @@ void PaintArea::setDefaultPen()
     m_pen.setJoinStyle(Qt::MiterJoin);
     m_pen.setColor(DEFAULT_PEN_COLOR);
     m_pen.setWidth(DEFAULT_PEN_WIDTH);
-}
-
-void PaintArea::setPaintTools()
-{
 }
 
 void PaintArea::setToolLayer(const QSize & size)
@@ -351,4 +348,5 @@ void PaintArea::transform(int type)
         rotate(type);
         break;
     }
+    m_paintWidget->repaint();
 }

@@ -23,12 +23,14 @@
         <file>icons/rectangle.png</file>
         <file>icons/clear.png</file>
         <file>icons/copy.png</file>
-        <file>icons/visible.png</file>
+        <file>icons/visible-on.png</file>
         <file>icons/color-picker.png</file>
         <file>icons/ellipse.png</file>
-        <file>icons/layer-visible-off.png</file>
+        <file>icons/visible-off.png</file>
         <file>icons/zoom-in.png</file>
         <file>icons/zoom-out.png</file>
         <file>background.bmp</file>
+        <file>icons/delete.png</file>
+        <file>icons/layers.png</file>
     </qresource>
 </RCC>
