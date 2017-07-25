@@ -185,13 +185,27 @@ void MainWindow::on_actionPaste_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
+    static const QString copyright = QStringLiteral(
+                "<p>Copyright 2017 <a href='https://github.com/SillyLossy/'>SillyLossy</a></p>"
+                 "<p>QtPaint is free software: you can redistribute it and/or modify "
+                 "it under the terms of the Lesser GNU General Public License as published by "
+                 "the Free Software Foundation, either version 3 of the License, or "
+                 "(at your option) any later version.</p>"
+                 "<p>QtPaint is distributed in the hope that it will be useful, "
+                 "but WITHOUT ANY WARRANTY; without even the implied warranty of "
+                 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
+                 "Lesser GNU General Public License for more details</p>"
+                 "<p>You should have received a copy of the Lesser GNU General Public License "
+                 "along with QtPaint. If not, see <a href='http://www.gnu.org/licenses/'>GNU.org</a>.</p>"
+                 "<p>Uses icons from Oxygen theme by The Oxygen Team (LGPL v3): "
+                 "<a href='https://github.com/KDE/oxygen-icons5'>their GitHub</a>.</p>");
     QMessageBox msgBox(this);
     QIcon icon;
     icon.addFile(QStringLiteral(":/icons/app.png"));
     msgBox.setWindowTitle(QStringLiteral("About"));
     msgBox.setIconPixmap(icon.pixmap(QSize(64, 64)));
     msgBox.setTextFormat(Qt::RichText);   //this is what makes the links clickable
-    msgBox.setText(QStringLiteral("Contains icons from Oxygen theme by KDE licensed with LGPL: <a href='https://github.com/KDE/oxygen-icons5'>GitHub</a>"));
+    msgBox.setText(copyright);
     msgBox.exec();
 }
 
