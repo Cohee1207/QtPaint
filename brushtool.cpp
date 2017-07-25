@@ -15,15 +15,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "brushtool.h"
-#include "paintarea.h"
 
 #include <QPainter>
-
-
-BrushTool::BrushTool(PaintArea* area) : PaintTool(area)
-{
-
-}
 
 const QString BrushTool::toolName()
 {
@@ -37,35 +30,35 @@ const QString BrushTool::iconName()
     return brushIcon;
 }
 
-void BrushTool::onMousePress(const QPoint& p)
-{
-    paintPoint(p);
+void BrushTool::onMousePress(PaintEvent* event)
+{  
+    paintPoint(event);
 }
 
-void BrushTool::onMouseRelease(const QPoint&)
+void BrushTool::onMouseRelease(PaintEvent*)
 {
 
 }
 
-void BrushTool::onMouseMove(const QPoint& p)
+void BrushTool::onMouseMove(PaintEvent* event)
 {
-    paintLine(m_area->prevPoint(), p);
+    paintLine(event);
 }
 
-void BrushTool::paintLine(const QPoint& p1, const QPoint& p2)
+void BrushTool::paintLine(PaintEvent* event)
 {
-    QPainter painter(m_area->selectedLayer());
-    if (m_area->antialiasingEnabled())
+    QPainter painter(event->selectedLayer);
+    if (event->antialiasingEnabled)
         painter.setRenderHint(QPainter::HighQualityAntialiasing);
-    painter.setPen(m_area->pen());
-    painter.drawLine(p1, p2);
+    painter.setPen(event->pen);
+    painter.drawLine(event->previousPoint, event->currentPoint);
 }
 
-void BrushTool::paintPoint(const QPoint& c)
+void BrushTool::paintPoint(PaintEvent* event)
 {
-    QPainter painter(m_area->selectedLayer());
-    if (m_area->antialiasingEnabled())
+    QPainter painter(event->selectedLayer);
+    if (event->antialiasingEnabled)
         painter.setRenderHint(QPainter::HighQualityAntialiasing);
-    painter.setPen(m_area->pen());
-    painter.drawPoint(c);
+    painter.setPen(event->pen);
+    painter.drawPoint(event->currentPoint);
 }

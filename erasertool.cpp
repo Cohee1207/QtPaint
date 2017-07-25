@@ -21,7 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QBitmap>
 
-EraserTool::EraserTool(PaintArea* area) : PaintTool(area)
+EraserTool::EraserTool()
 {
     m_eraser.setCapStyle(Qt::RoundCap);
     m_eraser.setColor(QColor(Qt::black));
@@ -39,39 +39,39 @@ const QString EraserTool::iconName()
     return eraserIcon;
 }
 
-void EraserTool::onMousePress(const QPoint& p)
+void EraserTool::onMousePress(PaintEvent * event)
 {
-    erasePoint(p);
+    erasePoint(event);
 }
 
-void EraserTool::onMouseRelease(const QPoint&)
+void EraserTool::onMouseRelease(PaintEvent*)
 {
 
 }
 
-void EraserTool::onMouseMove(const QPoint& p)
+void EraserTool::onMouseMove(PaintEvent* event)
 {
-    eraseLine(m_area->prevPoint(), p);
+    eraseLine(event);
 }
 
-void EraserTool::eraseLine(const QPoint& p1, const QPoint& p2)
+void EraserTool::eraseLine(PaintEvent* event)
 {
-    QPainter painter(m_area->selectedLayer());
-    if (m_area->antialiasingEnabled())
+    QPainter painter(event->selectedLayer);
+    if (event->antialiasingEnabled)
         painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-    m_eraser.setWidth(m_area->pen().width());
+    m_eraser.setWidth(event->pen.width());
     painter.setPen(m_eraser);
-    painter.drawLine(p1, p2);
+    painter.drawLine(event->previousPoint, event->currentPoint);
 }
 
-void EraserTool::erasePoint(const QPoint& c)
+void EraserTool::erasePoint(PaintEvent * event)
 {
-    QPainter painter(m_area->selectedLayer());
-    if (m_area->antialiasingEnabled())
+    QPainter painter(event->selectedLayer);
+    if (event->antialiasingEnabled)
         painter.setRenderHint(QPainter::HighQualityAntialiasing);
     painter.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-    m_eraser.setWidth(m_area->pen().width());
+    m_eraser.setWidth(event->pen.width());
     painter.setPen(m_eraser);
-    painter.drawPoint(c);
+    painter.drawPoint(event->currentPoint);
 }

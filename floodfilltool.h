@@ -22,20 +22,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 class FloodFillTool : public PaintTool {
 public:
-    FloodFillTool(PaintArea*);
-
     // PaintTool interface
 public:
     virtual const QString toolName() override;
     virtual const QString iconName() override;
-    virtual void onMousePress(const QPoint& p) override;
-    virtual void onMouseRelease(const QPoint& p) override;
-    virtual void onMouseMove(const QPoint& p) override;
+    virtual void onMousePress(PaintEvent*) override;
+    virtual void onMouseRelease(PaintEvent*) override;
+    virtual void onMouseMove(PaintEvent*) override;
 private:
     QColor m_fillColor;
     int imageWidth;
     int imageHeight;
-    void floodFill(const QPoint&);
+    void floodFill(PaintEvent*);
     bool valid(const QPoint&);
     bool canFill(const QImage*, const QPoint&, const QColor&);
 };

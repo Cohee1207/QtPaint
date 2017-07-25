@@ -21,19 +21,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 class LineTool : public PaintTool {
 public:
-    LineTool(PaintArea*);
-
     // PaintTool interface
 public:
     virtual const QString toolName() override;
     virtual const QString iconName() override;
-    virtual void onMousePress(const QPoint&) override;
-    virtual void onMouseRelease(const QPoint&) override;
-    virtual void onMouseMove(const QPoint&) override;
+    virtual void onMousePress(PaintEvent*) override;
+    virtual void onMouseRelease(PaintEvent*) override;
+    virtual void onMouseMove(PaintEvent*) override;
 protected:
     QPoint m_originPoint;
-    virtual void paint(const QPoint&, bool temporary);
-    void clearToolLayer();
+    virtual void paint(PaintEvent* event, bool temporary);
+    void clearToolLayer(QPixmap*);
 };
 
 #endif // LINETOOL_H

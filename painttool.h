@@ -17,8 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #ifndef PAINTTOOL_H
 #define PAINTTOOL_H
 
-#include <QString>
-#include <QMouseEvent>
+#include "paintevent.h"
 
 class PaintArea;
 
@@ -26,13 +25,9 @@ class PaintTool {
 public:
     virtual const QString toolName() = 0;
     virtual const QString iconName() = 0;
-    virtual void onMousePress(const QPoint&) = 0;
-    virtual void onMouseRelease(const QPoint&) = 0;
-    virtual void onMouseMove(const QPoint&) = 0;
-    virtual ~PaintTool() {}
-    PaintTool(PaintArea* area) : m_area(area) {}
-protected:
-    PaintArea* m_area;
+    virtual void onMousePress(PaintEvent*) = 0;
+    virtual void onMouseRelease(PaintEvent*) = 0;
+    virtual void onMouseMove(PaintEvent*) = 0;
 };
 
 #endif // PAINTTOOL_H

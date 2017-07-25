@@ -20,6 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QString>
 
+static const QString LAYER_NAME = QStringLiteral("Layer");
+
 class Layer {
 private:
     QImage m_image;
@@ -27,7 +29,7 @@ private:
     bool m_visible;
 public:
     Layer();
-    Layer(const QImage& image, const QString& name, bool m_visible = true);
+    Layer(const QImage& image, const QString& name = LAYER_NAME, bool m_visible = true);
     QString name() const;
     void setName(const QString& name);
     bool visible() const;

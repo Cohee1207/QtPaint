@@ -19,8 +19,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QBitmap>
 #include <QDebug>
+#include <QMouseEvent>
 
-PaintWidget::PaintWidget(PaintArea* parent) : QWidget(parent), m_area(parent)
+PaintWidget::PaintWidget(QWidget *parent) : QWidget(parent), m_selectedLayer(0)
 {
     QCursor cursor;
     cursor.setShape(Qt::CrossCursor);
@@ -35,28 +36,122 @@ PaintWidget::PaintWidget(PaintArea* parent) : QWidget(parent), m_area(parent)
 
 void PaintWidget::mouseMoveEvent(QMouseEvent* event)
 {
-    emit mouseMove(event->pos());
+    emit mouseMove(event->pos(), m_layers[m_selectedLayer].image());
 }
 
 void PaintWidget::mousePressEvent(QMouseEvent* event)
 {
-    emit mousePress(event->pos(), event->button());
+    if (event->button() == Qt::LeftButton && m_layers[m_selectedLayer].visible()) {
+        emit mousePress(event->pos(), m_layers[m_selectedLayer].image());
+    }
 }
 
 void PaintWidget::mouseReleaseEvent(QMouseEvent* event)
 {
-    emit mouseRelease(event->pos(), event->button());
+    if (event->button() == Qt::LeftButton) {
+        emit mouseRelease(event->pos(), m_layers[m_selectedLayer].image());
+    }
 }
 
 void PaintWidget::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
     painter.fillRect(rect(), m_checkeredBackground);
-    for (int i = 0; i < m_area->layersCount(); i++) {
-        if (m_area->layerVisibleAt(i)) {
-            auto image = m_area->layerImageAt(i);
-            painter.drawImage(rect(), *image);
+    for (int i = 0; i < m_layers.size(); i++) {
+        if (m_layers[i].visible()) {
+            painter.drawImage(rect(), *m_layers[i].image());
         }
     }
-    painter.drawPixmap(rect(), *m_area->toolLayer());
+    painter.drawPixmap(rect(), m_toolLayer);
+}
+
+QPixmap *PaintWidget::toolLayer()
+{
+    return &m_toolLayer;
+}
+
+void PaintWidget::rezoom(int zoom)
+{
+    if (m_layers.size() == 0) {
+        return;
+    }
+    auto layerSize = m_layers[0].image()->size();
+    auto newSize = layerSize * (zoom / 100.0);
+    resize(newSize);
+}
+
+void PaintWidget::setLayerVisible(int index, bool visible)
+{
+    if (index < 0 || index > m_layers.size()) {
+        return;
+    }
+    m_layers[index].setVisible(visible);
+}
+
+void PaintWidget::rotate(int degree)
+{
+    if (m_layers.size() == 0) {
+        return;
+    }
+    auto transform = new QTransform();
+    transform->rotate(qreal(degree));
+    for(int i = 0; i < m_layers.size(); i++) {
+        m_layers[i].setImage(m_layers[i].image()->transformed(*transform));
+    }
+    delete transform;
+    auto size = m_layers[0].image()->size();
+    resize(size);
+    setToolLayer(size);
+}
+
+void PaintWidget::flipHorizontal()
+{
+    for(int i = 0; i < m_layers.size(); i++) {
+        m_layers[i].setImage(m_layers[i].image()->mirrored(true,false));
+    }
+}
+
+void PaintWidget::flipVertical()
+{
+    for(int i = 0; i < m_layers.size(); i++) {
+        m_layers[i].setImage(m_layers[i].image()->mirrored(false,true));
+    }
+}
+
+void PaintWidget::setToolLayer(const QSize & size)
+{
+    m_toolLayer = QPixmap(size);
+    m_toolLayer.fill(Qt::transparent);
+}
+
+QImage PaintWidget::renderImage()
+{
+    if (m_layers.size() == 0) {
+        return QImage();
+    }
+    auto pixmap = QPixmap(size());
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    for (int i = 0; i < m_layers.size(); i++) {
+        if (m_layers[i].visible()) {
+            auto image = m_layers[i].image();
+            painter.drawImage(QPoint(0, 0), *image);
+        }
+    }
+    return pixmap.toImage();
+}
+
+void PaintWidget::setSingleLayer(const QImage& image)
+{
+    m_layers.clear();
+    m_layers.append(Layer(image));
+    m_selectedLayer = 0;
+    resize(image.size());
+    setToolLayer(image.size());
+    repaint();
+}
+
+void PaintWidget::addLayer(const QImage & image, const QString & name)
+{
+
 }

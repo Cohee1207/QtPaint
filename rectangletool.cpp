@@ -15,13 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "rectangletool.h"
-#include "paintarea.h"
 #include <QPainter>
-
-RectangleTool::RectangleTool(PaintArea* area) : LineTool(area)
-{
-
-}
 
 const QString RectangleTool::toolName()
 {
@@ -35,37 +29,37 @@ const QString RectangleTool::iconName()
     return rectangleIcon;
 }
 
-void RectangleTool::paint(const QPoint& p, bool temporary)
+void RectangleTool::paint(PaintEvent *event, bool temporary)
 {
-    clearToolLayer();
+    clearToolLayer(event->toolLayer);
     QPaintDevice* device;
     if (temporary) {
-        device = m_area->toolLayer();
+        device = event->toolLayer;
     }
     else {
-        device = m_area->selectedLayer();
+        device = event->selectedLayer;
     }
     QPainter painter(device);
-    if (m_area->antialiasingEnabled())
+    if (event->antialiasingEnabled)
         painter.setRenderHint(QPainter::HighQualityAntialiasing);
-    painter.setPen(m_area->pen());
-    painter.setBrush(m_area->brush());
-    painter.drawRect(QRect(m_originPoint, p));
+    painter.setPen(event->pen);
+    painter.setBrush(event->brush);
+    painter.drawRect(QRect(m_originPoint, event->currentPoint));
 }
 
-void RectangleTool::onMouseMove(const QPoint& p)
+void RectangleTool::onMouseMove(PaintEvent* event)
 {
-    if (p.x() == m_originPoint.x() || p.y() == m_originPoint.y()) {
+    if (event->currentPoint.x() == m_originPoint.x() || event->currentPoint.y() == m_originPoint.y()) {
         return;
     }
-    paint(p, true);
+    paint(event, true);
 }
 
-void RectangleTool::onMouseRelease(const QPoint& p)
+void RectangleTool::onMouseRelease(PaintEvent* event)
 {
-    if (p.x() == m_originPoint.x() || p.y() == m_originPoint.y()) {
+    if (event->currentPoint.x() == m_originPoint.x() || event->currentPoint.y() == m_originPoint.y()) {
         return;
     }
-    paint(p, false);
-    clearToolLayer();
+    paint(event, false);
+    clearToolLayer(event->toolLayer);
 }

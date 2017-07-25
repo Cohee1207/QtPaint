@@ -21,19 +21,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 class RectangleTool : public LineTool {
 public:
-    RectangleTool(PaintArea*);
-
     // PaintTool interface
 public:
     virtual const QString toolName() override;
     virtual const QString iconName() override;
-    virtual void onMouseMove(const QPoint&) override;
-    virtual void onMouseRelease(const QPoint&) override;
+    virtual void onMouseMove(PaintEvent*) override;
+    virtual void onMouseRelease(PaintEvent*) override;
 
     // LineTool interface
 protected:
 
-    virtual void paint(const QPoint&, bool temporary) override;
+    virtual void paint(PaintEvent* event, bool temporary) override;
 };
 
 #endif // RECTANGLETOOL_H

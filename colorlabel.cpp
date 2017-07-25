@@ -26,7 +26,7 @@ QColor ColorLabel::color() const
 void ColorLabel::setColor(const QColor& color)
 {
     m_color = color;
-    setStyleSheet(QStringLiteral("border-style:inset;border-width:1px;border-color:#999999;")+QStringLiteral("background:") + m_color.name());
+    setStyleSheet(QStringLiteral("border-style:inset;border-width:1px;border-color:#7A7A7A;")+QStringLiteral("background:") + m_color.name());
     setWindowOpacity(m_color.alpha() / 255);
 }
 

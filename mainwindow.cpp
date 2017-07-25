@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QImageWriter>
 #include <QCheckBox>
 #include <QMessageBox>
+#include <QCloseEvent>
 #include <QDockWidget>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -78,21 +79,6 @@ void MainWindow::on_actionSave_file_triggered()
 void MainWindow::on_actionSelect_color_triggered()
 {
     m_strokeColorLabel.openColorSelectionDialog();
-}
-
-void MainWindow::on_actionIncrease_pen_width_triggered()
-{
-    m_widthButton->setWidthText(m_paintArea->increasePenWidth());
-}
-
-void MainWindow::on_actionDecrease_pen_width_triggered()
-{
-    m_widthButton->setWidthText(m_paintArea->decreasePenWidth());
-}
-
-void MainWindow::on_actionShow_drawn_toggled(bool)
-{
-
 }
 
 void MainWindow::setToolBox()
@@ -178,7 +164,7 @@ void MainWindow::on_actionNew_image_triggered()
     auto dlg = new NewImageDialog(this);
     dlg->setWindowModality(Qt::WindowModal);
     if (dlg->exec()) {
-        m_paintArea->setDefaultLayer(dlg->width(), dlg->height(), dlg->color());
+        m_paintArea->setBlankLayer(dlg->width(), dlg->height(), dlg->color());
         m_fileName = DEFAULT_FILE_NAME;
         m_filePath = DEFAULT_FILE_NAME;
     }
@@ -223,13 +209,6 @@ void MainWindow::on_actionAbout_triggered()
     msgBox.setTextFormat(Qt::RichText);   //this is what makes the links clickable
     msgBox.setText(copyright);
     msgBox.exec();
-}
-
-void MainWindow::on_actionClear_drawn_triggered()
-{
-    if (QMessageBox::question(this, QStringLiteral(""), QStringLiteral("Are you sure? All changes will be lost.")) == QMessageBox::Yes) {
-        m_paintArea->setDefaultLayer();
-    }
 }
 
 void MainWindow::on_actionCopy_triggered()

@@ -106,36 +106,6 @@
     <bool>false</bool>
    </property>
   </widget>
-  <action name="actionIncrease_pen_width">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/up.png</normaloff>:/icons/up.png</iconset>
-   </property>
-   <property name="text">
-    <string>Width +</string>
-   </property>
-   <property name="toolTip">
-    <string>Increase pen width</string>
-   </property>
-   <property name="shortcut">
-    <string>]</string>
-   </property>
-  </action>
-  <action name="actionDecrease_pen_width">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/down.png</normaloff>:/icons/down.png</iconset>
-   </property>
-   <property name="text">
-    <string>Width -</string>
-   </property>
-   <property name="toolTip">
-    <string>Decrease pen width</string>
-   </property>
-   <property name="shortcut">
-    <string>[</string>
-   </property>
-  </action>
   <action name="actionOpen_file">
    <property name="icon">
     <iconset resource="resources.qrc">
@@ -179,27 +149,6 @@
    </property>
    <property name="shortcut">
     <string>P</string>
-   </property>
-  </action>
-  <action name="actionShow_drawn">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>:/icons/visible.png</normaloff>:/icons/visible.png</iconset>
-   </property>
-   <property name="text">
-    <string>Show drawn</string>
-   </property>
-   <property name="toolTip">
-    <string>Show drawn image</string>
-   </property>
-   <property name="shortcut">
-    <string>O</string>
    </property>
   </action>
   <action name="actionNew_image">
@@ -257,21 +206,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
-   </property>
-  </action>
-  <action name="actionClear_drawn">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/clear.png</normaloff>:/icons/clear.png</iconset>
-   </property>
-   <property name="text">
-    <string>Clear drawn</string>
-   </property>
-   <property name="toolTip">
-    <string>Clear drawn image</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+X</string>
    </property>
   </action>
   <action name="actionFlip_horizontal">

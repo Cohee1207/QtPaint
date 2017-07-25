@@ -45,19 +45,11 @@ private slots:
 
     void on_actionSelect_color_triggered();
 
-    void on_actionIncrease_pen_width_triggered();
-
-    void on_actionDecrease_pen_width_triggered();
-
-    void on_actionShow_drawn_toggled(bool arg1);
-
     void on_actionNew_image_triggered();
 
     void on_actionPaste_triggered();
 
     void on_actionAbout_triggered();
-
-    void on_actionClear_drawn_triggered();
 
     void on_actionCopy_triggered();
 

@@ -20,21 +20,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QPoint>
 #include "painttool.h"
 
-
 class BrushTool : public PaintTool {
 public:
-    BrushTool(PaintArea*);
-
     // PaintTool interface
 public:
     const QString toolName() override;
     const QString iconName() override;
-    virtual void onMousePress(const QPoint&) override;
-    virtual void onMouseRelease(const QPoint&) override;
-    virtual void onMouseMove(const QPoint&) override;
+    virtual void onMousePress(PaintEvent*) override;
+    virtual void onMouseRelease(PaintEvent*) override;
+    virtual void onMouseMove(PaintEvent*) override;
 private:
-    void paintLine(const QPoint& p1, const QPoint& p2);
-    void paintPoint(const QPoint& c);
+    void paintLine(PaintEvent* event);
+    void paintPoint(PaintEvent *event);
 };
 
 #endif // BRUSHTOOL_H

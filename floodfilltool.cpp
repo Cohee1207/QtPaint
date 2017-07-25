@@ -22,11 +22,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include "paintarea.h"
 
-FloodFillTool::FloodFillTool(PaintArea* area) : PaintTool(area)
-{
-
-}
-
 const QString FloodFillTool::toolName()
 {
     static const QString floodFillName = "Flood fill";
@@ -39,36 +34,36 @@ const QString FloodFillTool::iconName()
     return floodFillIcon;
 }
 
-void FloodFillTool::onMousePress(const QPoint& p)
+void FloodFillTool::onMousePress(PaintEvent* event)
 {
-    m_fillColor = m_area->pen().color();
-    imageHeight = m_area->selectedLayer()->height();
-    imageWidth = m_area->selectedLayer()->width();
-    floodFill(p);
+    m_fillColor = event->pen.color();
+    imageHeight = event->selectedLayer->height();
+    imageWidth = event->selectedLayer->width();
+    floodFill(event);
 }
 
-void FloodFillTool::onMouseRelease(const QPoint&)
-{
-
-}
-
-void FloodFillTool::onMouseMove(const QPoint&)
+void FloodFillTool::onMouseRelease(PaintEvent*)
 {
 
 }
 
-void FloodFillTool::floodFill(const QPoint& point)
+void FloodFillTool::onMouseMove(PaintEvent*)
 {
-    QImage* image = m_area->selectedLayer();
+
+}
+
+void FloodFillTool::floodFill(PaintEvent* event)
+{
+    QImage* image = event->selectedLayer;
     QPainter painter(image);
     painter.setPen(m_fillColor);
-    QColor oldColor = image->pixelColor(point);
+    QColor oldColor = image->pixelColor(event->currentPoint);
 
     // The stack of pixels to fill
     QStack<QPoint> pixels;
 
     // Add the initial point
-    pixels.append(point);
+    pixels.append(event->currentPoint);
 
     const int rx[] = { -1,  0, +1, 0 };
     const int ry[] = {  0, +1, 0, -1 };

@@ -15,13 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "ellipsetool.h"
-#include "paintarea.h"
 #include <QPainter>
-
-EllipseTool::EllipseTool(PaintArea* area) : LineTool(area)
-{
-
-}
 
 const QString EllipseTool::toolName()
 {
@@ -35,39 +29,39 @@ const QString EllipseTool::iconName()
     return ellipseIcon;
 }
 
-void EllipseTool::paint(const QPoint& p, bool temporary)
+void EllipseTool::paint(PaintEvent* event, bool temporary)
 {
-    clearToolLayer();
+    clearToolLayer(event->toolLayer);
     QPaintDevice* device;
     if (temporary) {
-        device = m_area->toolLayer();
+        device = event->toolLayer;
     }
     else {
-        device = m_area->selectedLayer();
+        device = event->selectedLayer;
     }
     QPainter painter(device);
-    if (m_area->antialiasingEnabled())
+    if (event->antialiasingEnabled)
         painter.setRenderHint(QPainter::HighQualityAntialiasing);
-    painter.setPen(m_area->pen());
-    painter.setBrush(m_area->brush());
-    painter.drawEllipse(QRectF(m_originPoint, p));
+    painter.setPen(event->pen);
+    painter.setBrush(event->brush);
+    painter.drawEllipse(QRectF(m_originPoint, event->currentPoint));
 }
 
 
 
-void EllipseTool::onMouseMove(const QPoint& p)
+void EllipseTool::onMouseMove(PaintEvent* event)
 {
-    if (p.x() == m_originPoint.x() || p.y() == m_originPoint.y()) {
+    if (event->currentPoint.x() == m_originPoint.x() || event->currentPoint.y() == m_originPoint.y()) {
         return;
     }
-    paint(p, true);
+    paint(event, true);
 }
 
-void EllipseTool::onMouseRelease(const QPoint& p)
+void EllipseTool::onMouseRelease(PaintEvent* event)
 {
-    if (p.x() == m_originPoint.x() || p.y() == m_originPoint.y()) {
+    if (event->currentPoint.x() == m_originPoint.x() || event->currentPoint.y() == m_originPoint.y()) {
         return;
     }
-    paint(p, false);
-    clearToolLayer();
+    paint(event, false);
+    clearToolLayer(event->toolLayer);
 }

@@ -23,20 +23,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 class EraserTool : public PaintTool {
 public:
-    EraserTool(PaintArea*);
-
+    EraserTool();
     // PaintTool interface
 public:
     const QString toolName() override;
     const QString iconName() override;
-    virtual void onMousePress(const QPoint&) override;
-    virtual void onMouseRelease(const QPoint&) override;
-    virtual void onMouseMove(const QPoint&) override;
+    virtual void onMousePress(PaintEvent*) override;
+    virtual void onMouseRelease(PaintEvent*) override;
+    virtual void onMouseMove(PaintEvent*) override;
 private:
     QPen m_eraser;
 
-    void eraseLine(const QPoint& p1, const QPoint& p2);
-    void erasePoint(const QPoint& c);
+    void eraseLine(PaintEvent*);
+    void erasePoint(PaintEvent*);
 };
 
 #endif // ERASERTOOL_H

@@ -19,11 +19,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include "QPainter"
 #include <QDebug>
 
-LineTool::LineTool(PaintArea* area) : PaintTool(area)
-{
-
-}
-
 const QString LineTool::toolName()
 {
     static const QString lineName = QStringLiteral("Line");
@@ -36,41 +31,41 @@ const QString LineTool::iconName()
     return lineIcon;
 }
 
-void LineTool::onMousePress(const QPoint& p)
+void LineTool::onMousePress(PaintEvent* event)
 {
-    m_originPoint = p;
+    m_originPoint = event->currentPoint;
 }
 
-void LineTool::onMouseRelease(const QPoint& p)
+void LineTool::onMouseRelease(PaintEvent* event)
 {
-    paint(p, false);
-    clearToolLayer();
+    paint(event, false);
+    clearToolLayer(event->toolLayer);
 }
 
-void LineTool::onMouseMove(const QPoint& p)
+void LineTool::onMouseMove(PaintEvent* event)
 {
-    paint(p, true);
+    paint(event, true);
 }
 
-void LineTool::paint(const QPoint& p, bool temporary)
+void LineTool::paint(PaintEvent* event, bool temporary)
 {
-    clearToolLayer();
+    clearToolLayer(event->toolLayer);
     QPaintDevice* device;
     if (temporary) {
-        device = m_area->toolLayer();
+        device = event->toolLayer;
     }
     else {
-        device = m_area->selectedLayer();
+        device = event->selectedLayer;
     }
     QPainter painter(device);
-    if (m_area->antialiasingEnabled())
+    if (event->antialiasingEnabled)
         painter.setRenderHint(QPainter::HighQualityAntialiasing);
-    painter.setPen(m_area->pen());
-    painter.drawLine(m_originPoint, p);
+    painter.setPen(event->pen);
+    painter.drawLine(m_originPoint, event->currentPoint);
 }
 
-void LineTool::clearToolLayer()
+void LineTool::clearToolLayer(QPixmap* layer)
 {
-    m_area->toolLayer()->fill(Qt::transparent);
+    layer->fill(Qt::transparent);
 }
 

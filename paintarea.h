@@ -38,13 +38,14 @@ class PaintArea : public QScrollArea {
     Q_OBJECT
 public slots:
     void setPenColor(const QColor& color);
+
     void setPenWidth(int);
 
-    void mouseMove(const QPoint&);
+    void mouseMove(const QPoint&, QImage*);
 
-    void mousePress(const QPoint&, int);
+    void mousePress(const QPoint&, QImage*);
 
-    void mouseRelease(const QPoint&, int);
+    void mouseRelease(const QPoint&, QImage*);
 
 public:
     enum PaintLimits {
@@ -70,13 +71,9 @@ public:
 
     void transform(int type);
 
-    int increasePenWidth();
-
-    int decreasePenWidth();
-
     bool loadImage(const QString&);
 
-    void setDefaultLayer(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, QColor fill = QColor(Qt::white));
+    void setBlankLayer(int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT, QColor fill = QColor(Qt::white));
 
     bool pasteImage();
 
@@ -86,23 +83,11 @@ public:
 
     QSize imageSize() const;
 
-    void setLayerVisible(int, bool);
-
-    QImage* selectedLayer();
-
-    QImage* layerImageAt(int i);
-
-    bool layerVisibleAt(int i);
-
-    int layersCount() const;
-
     QPixmap* toolLayer();
 
     void setSelectedTool(int i);
 
     int selectedTool() const;
-
-    QPoint prevPoint() const;
 
     const QVector<PaintTool*>* tools() const;
 
@@ -115,41 +100,29 @@ public:
     void setBrushColor(const QColor&);
 
     int zoom() const;
-    void setZoom(int zoom);
-    void rezoom();
-    QPoint adjustedPos(const QPoint&);
 
-private slots:
-    void _update_proxy();
+    void setZoom(int zoom);
+
 private:
-    void setRepaintTimer();
     void setDefaultPen();
-    void setPaintWidgetBackground();
-    void setToolLayer(const QSize&);
-    void rotate(int);
-    void flipHorizontal();
-    void flipVertical();
+    PaintEvent *fillPaintEvent(const QPoint &point, QImage*);
+    QPoint adjustedPos(const QPoint&);
 private:
     bool m_collectMouseMove;
     int m_selectedTool;
-    int m_selectedLayer;
     bool m_antialiasingEnabled;
     const QVector<PaintTool*> m_tools {
-        new BrushTool(this),
-        new EraserTool(this),
-        new LineTool(this),
-        new EllipseTool(this),
-        new RectangleTool(this),
-        new FloodFillTool(this)
+        new BrushTool(),
+        new EraserTool(),
+        new LineTool(),
+        new EllipseTool(),
+        new RectangleTool(),
+        new FloodFillTool()
     };
 
     int m_zoom;
 
     PaintWidget* m_paintWidget;
-
-    QVector<Layer> m_layers;
-
-    QPixmap m_toolLayer;
 
     QPoint m_prevPoint;
 

@@ -24,46 +24,24 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <QTransform>
 
 #include "paintarea.h"
+#include "paintevent.h"
 
-static const QString LAYER_NAME = QStringLiteral("Layer");
 static const int DEFAULT_ZOOM = 100;
 
-PaintArea::PaintArea(QWidget* parent) : QScrollArea(parent), m_paintWidget(new PaintWidget(this))
+PaintArea::PaintArea(QWidget* parent) : QScrollArea(parent), m_paintWidget(new PaintWidget())
 {
     m_antialiasingEnabled = false;
     m_selectedTool = 0;
-    m_selectedLayer = 0;
     m_brush = QColor(0xFF, 0xFF, 0xFF, 0x00);
     m_zoom = DEFAULT_ZOOM;
     setAlignment(Qt::AlignCenter);
     setBackgroundRole(QPalette::Midlight);
-    //setRepaintTimer();
-    setDefaultLayer();
+    setBlankLayer();
     setDefaultPen();
     setWidget(m_paintWidget);
     connect(m_paintWidget, &PaintWidget::mouseMove, this, &PaintArea::mouseMove);
     connect(m_paintWidget, &PaintWidget::mouseRelease, this, &PaintArea::mouseRelease);
     connect(m_paintWidget, &PaintWidget::mousePress, this, &PaintArea::mousePress);
-}
-
-int PaintArea::increasePenWidth()
-{
-    auto width = m_pen.width();
-    if (width < MAX_PEN_WIDTH) {
-        m_pen.setWidth(++width);
-        return width;
-    }
-    return width;
-}
-
-int PaintArea::decreasePenWidth()
-{
-    auto width = m_pen.width();
-    if (width > MIN_PEN_WIDTH) {
-        m_pen.setWidth(--width);
-        return width;
-    }
-    return width;
 }
 
 void PaintArea::setPenColor(const QColor& color)
@@ -89,12 +67,7 @@ bool PaintArea::loadImage(const QString& path)
         return false;
     }
     image = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-    m_layers.clear();
-    m_layers.append(Layer(image, LAYER_NAME));
-    m_selectedLayer = 0;
-    m_paintWidget->resize(image.size());
-    setToolLayer(image.size());
-    m_paintWidget->repaint();
+    m_paintWidget->setSingleLayer(image);
     return true;
 }
 
@@ -103,106 +76,49 @@ QSize PaintArea::imageSize() const
     return m_paintWidget->size();
 }
 
-void PaintArea::setLayerVisible(int index, bool visible)
-{
-    if (index < 0 || index > m_layers.size()) {
-        qDebug() << "Invalid index in PaintArea::setLayerVisible: " << index;
-        return;
-    }
-    m_layers[index].setVisible(visible);
-}
-
-QImage* PaintArea::selectedLayer()
-{
-    return m_layers[m_selectedLayer].image();
-}
-
-QImage* PaintArea::layerImageAt(int i)
-{
-    return m_layers[i].image();
-}
-
-bool PaintArea::layerVisibleAt(int i)
-{
-    return m_layers[i].visible();
-}
-
-int PaintArea::layersCount() const
-{
-    return m_layers.size();
-}
-
-void PaintArea::setDefaultLayer(int width, int height, QColor fill)
+void PaintArea::setBlankLayer(int width, int height, QColor fill)
 {
     auto pixmap = QPixmap(width, height);
     pixmap.fill(fill);
     QImage image = pixmap.toImage().convertToFormat(QImage::Format_ARGB32_Premultiplied);
-    m_layers.clear();
-    m_layers.append(Layer(image, LAYER_NAME));
-    m_selectedLayer = 0;
-    m_paintWidget->resize(width, height);
-    setToolLayer(QSize(width,height));
-    m_paintWidget->repaint();
+    m_paintWidget->setSingleLayer(image);
 }
 
-void PaintArea::mouseMove(const QPoint& pos)
+void PaintArea::mouseMove(const QPoint& pos, QImage* layer)
 {
     if (m_collectMouseMove) {
         auto adjusted = adjustedPos(pos);
-        m_tools[m_selectedTool]->onMouseMove(adjusted);
+        auto event = fillPaintEvent(adjusted,layer);
+        m_tools[m_selectedTool]->onMouseMove(event);
         m_prevPoint = adjusted;
         m_paintWidget->repaint();
+        delete event;
     }
 }
 
-void PaintArea::mousePress(const QPoint& pos, int button)
+void PaintArea::mousePress(const QPoint& pos, QImage* layer)
 {
-    if (button == Qt::LeftButton && m_layers[m_selectedLayer].visible()) {
-        m_collectMouseMove = true;
-        auto adjusted = adjustedPos(pos);
-        m_prevPoint = adjusted;
-        m_tools[m_selectedTool]->onMousePress(adjusted);
-        m_paintWidget->repaint();
-    }
-}
-
-void PaintArea::mouseRelease(const QPoint& pos, int button)
-{
-    if (button == Qt::LeftButton) {
-        m_collectMouseMove = false;
-        m_tools[m_selectedTool]->onMouseRelease(adjustedPos(pos));
-        m_paintWidget->repaint();
-    }
-}
-
-void PaintArea::_update_proxy()
-{
+    m_collectMouseMove = true;
+    auto adjusted = adjustedPos(pos);
+    m_prevPoint = adjusted;
+    auto event = fillPaintEvent(adjusted,layer);
+    m_tools[m_selectedTool]->onMousePress(event);
     m_paintWidget->repaint();
+    delete event;
+}
+
+void PaintArea::mouseRelease(const QPoint& pos, QImage* layer)
+{
+    m_collectMouseMove = false;
+    auto event = fillPaintEvent(adjustedPos(pos),layer);
+    m_tools[m_selectedTool]->onMouseRelease(event);
+    m_paintWidget->repaint();
+    delete event;
 }
 
 QImage PaintArea::saveImage()
 {
-    if (m_layers.size() == 0) {
-        return QImage();
-    }
-    auto pixmap = QPixmap(m_paintWidget->size());
-    pixmap.fill(Qt::transparent);
-    QPainter painter(&pixmap);
-    for (int i = 0; i < m_layers.size(); i++) {
-        if (m_layers[i].visible()) {
-            auto image = m_layers[i].image();
-            painter.drawImage(QPoint(0, 0), *image);
-        }
-    }
-    return pixmap.toImage();
-}
-
-void PaintArea::setRepaintTimer()
-{
-    static const int REPAINT_RATE = 500; // 2 fps
-    QTimer* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &PaintArea::_update_proxy);
-    timer->start(REPAINT_RATE);
+    return m_paintWidget->renderImage();
 }
 
 void PaintArea::setDefaultPen()
@@ -215,41 +131,18 @@ void PaintArea::setDefaultPen()
     m_pen.setWidth(DEFAULT_PEN_WIDTH);
 }
 
-void PaintArea::setToolLayer(const QSize & size)
-{
-    m_toolLayer = QPixmap(size);
-    m_toolLayer.fill(Qt::transparent);
-}
 
-
-void PaintArea::rotate(int degree)
+PaintEvent *PaintArea::fillPaintEvent(const QPoint& point, QImage * layer)
 {
-    if (m_layers.size() == 0) {
-        return;
-    }
-    auto transform = new QTransform();
-    transform->rotate(qreal(degree));
-    for(int i = 0; i < m_layers.size(); i++) {
-        m_layers[i].setImage(m_layers[i].image()->transformed(*transform));
-    }
-    delete transform;
-    auto size = m_layers[0].image()->size();
-    m_paintWidget->resize(size);
-    setToolLayer(size);
-}
-
-void PaintArea::flipHorizontal()
-{
-    for(int i = 0; i < m_layers.size(); i++) {
-        m_layers[i].setImage(m_layers[i].image()->mirrored(true,false));
-    }
-}
-
-void PaintArea::flipVertical()
-{
-    for(int i = 0; i < m_layers.size(); i++) {
-        m_layers[i].setImage(m_layers[i].image()->mirrored(false,true));
-    }
+    auto event = new PaintEvent;
+    event->antialiasingEnabled = m_antialiasingEnabled;
+    event->brush = m_brush;
+    event->currentPoint = point;
+    event->pen = m_pen;
+    event->previousPoint = m_prevPoint;
+    event->selectedLayer = layer;
+    event->toolLayer = m_paintWidget->toolLayer();
+    return event;
 }
 
 int PaintArea::zoom() const
@@ -260,24 +153,12 @@ int PaintArea::zoom() const
 void PaintArea::setZoom(int zoom)
 {
     m_zoom = zoom;
-    rezoom();
+    m_paintWidget->rezoom(zoom);
 }
 
-void PaintArea::rezoom()
-{
-    if (m_layers.size() == 0) {
-        return;
-    }
-    auto layerSize = m_layers[0].image()->size();
-    auto newSize = layerSize * (m_zoom / 100.0);
-    m_paintWidget->resize(newSize);
-}
 
 QPoint PaintArea::adjustedPos(const QPoint & pos)
 {
-    if (m_layers.size() == 0) {
-        return pos;
-    }
     auto factor = 100.0 / m_zoom;
     return pos * factor;
 }
@@ -308,11 +189,6 @@ const QVector<PaintTool*>* PaintArea::tools() const
     return &m_tools;
 }
 
-QPoint PaintArea::prevPoint() const
-{
-    return m_prevPoint;
-}
-
 int PaintArea::selectedTool() const
 {
     return m_selectedTool;
@@ -323,11 +199,6 @@ void PaintArea::setSelectedTool(int i)
     m_selectedTool = i;
 }
 
-QPixmap* PaintArea::toolLayer()
-{
-    return &m_toolLayer;
-}
-
 bool PaintArea::pasteImage()
 {
     auto clipboard = QApplication::clipboard();
@@ -335,7 +206,7 @@ bool PaintArea::pasteImage()
     if (image.isNull()) {
         return false;
     }
-    m_layers.append(Layer(image, QStringLiteral("Pasted")));
+    m_paintWidget->addLayer(image, QStringLiteral("Pasted"));
     return true;
 }
 
@@ -354,14 +225,14 @@ void PaintArea::transform(int type)
 {
     switch(type) {
     case FLIP_HORIZONTAL:
-        flipHorizontal();
+        m_paintWidget->flipHorizontal();
         break;
     case FLIP_VERTICAL:
-        flipVertical();
+        m_paintWidget->flipVertical();
         break;
     case ROTATE_LEFT:
     case ROTATE_RIGHT:
-        rotate(type);
+        m_paintWidget->rotate(type);
         break;
     }
     m_paintWidget->repaint();

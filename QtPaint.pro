@@ -61,7 +61,8 @@ HEADERS += \
     layer.h \
     paintwidget.h \
     zoomslider.h \
-    layerslist.h
+    layerslist.h \
+    paintevent.h
 
 FORMS += \
         mainwindow.ui \
